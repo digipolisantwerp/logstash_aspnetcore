@@ -1,27 +1,29 @@
 {
-	"version": "1.0.0",
-	"description": "Logstash provider for the ASP.NET 5 logging framework.",
-	"authors": [ "digipolis.be" ],
-	"tags": [ "" ],
-	"projectUrl": "",
-	"licenseUrl": "",
-	"dependencies": {
-		
-	},
-	"frameworks": {
-		"dnx451": { }
-	},
-	"exclude": [
-		"node_modules",
-		"bower_components",
-		".grunt"
-	],
-    "publishExclude": [
-        "node_modules",
-		"bower_components",
-		"**.xproj",
-		"**.user",
-		"**.vspscc"
-    ]
+  "version": "1.0.0",
+  "description": "Logstash provider for the ASP.NET 5 logging framework.",
+  "authors": [ "digipolis.be" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "dependencies": {
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+    "Newtonsoft.Json.Schema": "2.0.2",
+    "System.ComponentModel.Annotations": "4.0.11-beta-23516"
+  },
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.ComponentModel.DataAnnotations": "4.0.0.0"
+      },
+      "dependencies": {
+      }
+    }
+  },
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+  "commands": {
+    "Example": "Toolbox.Logstash"
+  }
 }
 
