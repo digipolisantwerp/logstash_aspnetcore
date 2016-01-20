@@ -21,7 +21,7 @@ namespace Toolbox.Logstash.Client
     {
         private readonly Guid _logId;
         //TODO add your logstash url
-        private readonly Uri _url = new Uri("http://localhost:8080/");
+        private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");
         private readonly IWebClient _webClient;
         private string _localIPAddress;
         private string _currentProcessID;

@@ -75,7 +75,7 @@ namespace Toolbox.Logstash
                 }
                 else if (logLevel == LogLevel.Verbose)
                 {
-                    return Client.LogLevel.DEBUG;
+                    return Client.LogLevel.VERBOSE;
                 }
                 else if (logLevel == LogLevel.Warning)
                 {
@@ -87,7 +87,7 @@ namespace Toolbox.Logstash
                 }
                 else if (logLevel == LogLevel.Critical)
                 {
-                    return Client.LogLevel.ERROR;
+                    return Client.LogLevel.CRITICAL;
                 }
                 else
                 {

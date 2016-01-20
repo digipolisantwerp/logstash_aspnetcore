@@ -80,7 +80,6 @@ namespace Toolbox.Logstash.Client
         }
 
         [JsonProperty(Required = Required.Always)]
-        //[JsonConverter(typeof(IPAddressConverter))]
         [RegularExpression(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b")]
         public string IPAddress
         {
@@ -89,7 +88,9 @@ namespace Toolbox.Logstash.Client
         }
 
         [JsonProperty(Required = Required.Always)]
-        //[RegularExpression(@"^[0-9]+$")]
+        [RegularExpression(@"^\d$")]
+        //enkel deze toolbox
+        //beschikbaar op de ESB?
         public string ProcessID
         {
             get;
@@ -97,7 +98,9 @@ namespace Toolbox.Logstash.Client
         }
 
         [JsonProperty(Required = Required.Always)]
-        //[RegularExpression(@"^[0-9]+$")]
+        [RegularExpression(@"^\d$")]
+        //enkel deze toolbox
+        //beschikbaar op de ESB?
         public string ThreadID
         {
             get;
@@ -124,7 +127,6 @@ namespace Toolbox.Logstash.Client
         [JsonProperty(Required = Required.Always)]
         [MaxLength(32)]
         [MinLength(1)]
-        //[RegularExpression(@"^[0-9]+$")]
         public string VersionNumber
         {
             get;
@@ -162,7 +164,9 @@ namespace Toolbox.Logstash.Client
         INFO,
         DEBUG,
         ERROR,
-        WARNING
+        WARNING,
+        CRITICAL,
+        VERBOSE
     }
 
     /// <summary>
