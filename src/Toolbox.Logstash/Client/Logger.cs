@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Toolbox.Logstash.Message;
 
 namespace Toolbox.Logstash.Client
 {
@@ -20,7 +21,6 @@ namespace Toolbox.Logstash.Client
     public class Logger : ILogger
     {
         private readonly Guid _logId;
-        //TODO add your logstash url
         private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");
         private readonly IWebClient _webClient;
         private string _localIPAddress;
@@ -72,7 +72,7 @@ namespace Toolbox.Logstash.Client
 
         public void Verbose(Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            Log(exception, LogLevel.DEBUG, messageTemplate, propertyValues);
+            Log(exception, LogStashLevel.Trace, messageTemplate, propertyValues);
         }
 
         public void Debug(string messageTemplate, params object[] propertyValues)
@@ -82,7 +82,7 @@ namespace Toolbox.Logstash.Client
 
         public void Debug(Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            Log(exception, LogLevel.DEBUG, messageTemplate, propertyValues);
+            Log(exception, LogStashLevel.Debug, messageTemplate, propertyValues);
         }
 
         public void Information(string messageTemplate, params object[] propertyValues)
@@ -92,7 +92,7 @@ namespace Toolbox.Logstash.Client
 
         public void Information(Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            Log(exception, LogLevel.INFO, messageTemplate, propertyValues);
+            Log(exception, LogStashLevel.Information, messageTemplate, propertyValues);
         }
 
         public void Warning(string messageTemplate, params object[] propertyValues)
@@ -102,7 +102,7 @@ namespace Toolbox.Logstash.Client
 
         public void Warning(Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            Log(exception, LogLevel.WARNING, messageTemplate, propertyValues);
+            Log(exception, LogStashLevel.Warning, messageTemplate, propertyValues);
         }
 
         public void Error(string messageTemplate, params object[] propertyValues)
@@ -112,20 +112,20 @@ namespace Toolbox.Logstash.Client
 
         public void Error(Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            Log(exception, LogLevel.ERROR, messageTemplate, propertyValues);
+            Log(exception, LogStashLevel.Error, messageTemplate, propertyValues);
         }
 
-        public void Fatal(string messageTemplate, params object[] propertyValues)
+        public void Critical(string messageTemplate, params object[] propertyValues)
         {
-            Fatal(null, messageTemplate, propertyValues);
+            Critical(null, messageTemplate, propertyValues);
         }
 
-        public void Fatal(Exception exception, string messageTemplate, params object[] propertyValues)
+        public void Critical(Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            Log(exception, LogLevel.ERROR, messageTemplate, propertyValues);
+            Log(exception, LogStashLevel.Critical, messageTemplate, propertyValues);
         }
 
-        void Log(Exception exception, LogLevel level, string messageTemplate, params object[] propertyValues)
+        void Log(Exception exception, LogStashLevel level, string messageTemplate, params object[] propertyValues)
         {
             LogMessage message = new LogMessage();
             //TBD enrich message
@@ -135,9 +135,9 @@ namespace Toolbox.Logstash.Client
 
         public string Log(LogMessage message)
         {
-            message.Infrastructure.IPAddress = _localIPAddress;
-            message.Infrastructure.ProcessID = _currentProcessID;
-            message.Infrastructure.ThreadID = Thread.CurrentThread.ManagedThreadId.ToString();
+            message.Header.IPAddress = _localIPAddress;
+            message.Header.ProcessId = _currentProcessID;
+            message.Header.ThreadId = Thread.CurrentThread.ManagedThreadId.ToString();
             return EndLog(BeginLog(message, null, null));
         }
 
@@ -244,13 +244,13 @@ namespace Toolbox.Logstash.Client
         {
             if (asyncResult == null)
             {
-                throw new ArgumentNullException("asyncResult");
+                throw new ArgumentNullException(nameof(asyncResult));
             }
 
             var task = asyncResult as Task<T>;
             if (task == null)
             {
-                throw new ArgumentException(null, "asyncResult");
+                throw new ArgumentException(null, nameof(asyncResult));
             }
 
             return task.Result;

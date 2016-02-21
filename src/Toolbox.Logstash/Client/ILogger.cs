@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Toolbox.Logstash.Message;
 
 namespace Toolbox.Logstash.Client
 {
@@ -120,11 +118,11 @@ namespace Toolbox.Logstash.Client
         /// <summary>
         /// Write a log message with the Fatal severity.
         /// </summary>
-        void Fatal(string messageTemplate, params object[] propertyValues);
+        void Critical(string messageTemplate, params object[] propertyValues);
 
         /// <summary>
         /// Write a log message with the Verbose Fatal and associated exception.
         /// </summary>
-        void Fatal(Exception exception, string messageTemplate, params object[] propertyValues);
+        void Critical(Exception exception, string messageTemplate, params object[] propertyValues);
     }
 }
