@@ -1,5 +1,5 @@
 ﻿using System;
-using Toolbox.Logstash.Internal;
+using Toolbox.Logstash.Options.Internal;
 using Toolbox.Logstash.Message;
 using Xunit;
 

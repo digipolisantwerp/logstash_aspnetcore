@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Toolbox.Logstash.Internal;
+using Toolbox.Logstash.Options.Internal;
 
 namespace Toolbox.Logstash.Message
 {

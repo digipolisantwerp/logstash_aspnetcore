@@ -1,37 +1,40 @@
 ﻿using System;
-#if NET451 || DNX451
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Messaging;
-#else
-using System.Threading;
-#endif
 using Microsoft.Extensions.Logging;
+using Toolbox.Logstash.Client;
 using Toolbox.Logstash.Loggers;
 
 namespace Toolbox.Logstash
 {
     public class LogstashHttpLoggerProvider : ILoggerProvider
     {
-        public LogstashHttpLoggerProvider(ILogstashLogger logger = null)
+        public LogstashHttpLoggerProvider(LogstashOptions options, ILogstashLogger logger = null)
         {
-            _logger = logger;
+            if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+
+            Options = options;
+            Logger = logger;
         }
 
         private object _synclock = new object();
 
+        internal LogstashOptions Options { get; private set; }
+        internal ILogstashLogger Logger { get; private set; }
+        
         public ILogger CreateLogger(string name)
         {
-            if ( _logger == null )
+            if ( Logger == null )
             {
                 lock ( _synclock )
                 {
-                    if ( _logger == null ) _logger = new LogstashHttpLogger();
+                    if ( Logger == null )
+                    {
+                        var webClient = new DotNetWebClientProxy();
+                        Logger = new LogstashHttpLogger(Options, webClient);
+                    }
                 }
             }
-            return new LogstashLogger(_logger);
+            return new LogstashLogger(Logger);
         }
-
-        private ILogstashLogger _logger;
 
         public void Dispose()
         { }

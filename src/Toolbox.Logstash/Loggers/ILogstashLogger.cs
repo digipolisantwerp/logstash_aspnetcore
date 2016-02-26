@@ -1,4 +1,5 @@
 ﻿using System;
+using Toolbox.Logstash.Client;
 using Toolbox.Logstash.Message;
 
 namespace Toolbox.Logstash.Loggers

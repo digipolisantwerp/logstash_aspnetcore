@@ -18,27 +18,24 @@ namespace Toolbox.Logstash.Loggers
 {
     public class LogstashHttpLogger : ILogstashLogger
     {
-        public LogstashHttpLogger() : this(null)
-        { }
-
-        /// <summary>
-        /// Creates a new logger with the specified log ID and URL. 
-        /// </summary>
-        public LogstashHttpLogger(Uri url) : this(url, new DotNetWebClientProxy())
-        { }
-
-        internal LogstashHttpLogger(Uri url, IWebClient webClient)
+        public LogstashHttpLogger(LogstashOptions options, IWebClient webClient)
         {
-            if ( url != null ) _url = url;
-            _webClient = webClient;
+            if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
+            if ( webClient == null ) throw new ArgumentNullException(nameof(webClient), $"{nameof(webClient)} cannot be null.");
+
+            Options = options;
+            WebClient = webClient;
             _localIPAddress = GetLocalIPAddress();
-            _currentProcessID = GetCurrentProcessID();
+            _currentProcessId = GetCurrentProcessId();
         }
 
         private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");
-        private readonly IWebClient _webClient;
+
+        public LogstashOptions Options { get; private set; }
+        public IWebClient WebClient { get; private set; }
+
         private string _localIPAddress;
-        private string _currentProcessID;
+        private string _currentProcessId;
 
         public Uri Url { get { return _url; } }
 
@@ -57,7 +54,7 @@ namespace Toolbox.Logstash.Loggers
         public string Log(LogMessage message)
         {
             message.Header.IPAddress = _localIPAddress;
-            message.Header.ProcessId = _currentProcessID;
+            message.Header.ProcessId = _currentProcessId;
             message.Header.ThreadId = Thread.CurrentThread.ManagedThreadId.ToString();
             return EndLog(BeginLog(message, null, null));
         }
@@ -75,7 +72,7 @@ namespace Toolbox.Logstash.Loggers
             //var json = JsonConvert.SerializeObject(message, jsonSerializerSettings);
             var json = JsonConvert.SerializeObject(message);
 
-            return _webClient.Post(headers, ApiUrl(), json)
+            return WebClient.Post(headers, ApiUrl(), json)
                              .ContinueWith(t =>
                              {
                                  if (t.Status != TaskStatus.RanToCompletion)
@@ -110,7 +107,7 @@ namespace Toolbox.Logstash.Loggers
 
         public IAsyncResult BeginGetMessage(string id, AsyncCallback asyncCallback, object asyncState)
         {
-            return _webClient.Get(ApiUrl(new NameValueCollection { { "id", id } }))
+            return WebClient.Get(ApiUrl(new NameValueCollection { { "id", id } }))
                              .ContinueWith(t =>
                              {
                                  if (t.Status != TaskStatus.RanToCompletion)
@@ -190,7 +187,7 @@ namespace Toolbox.Logstash.Loggers
             throw new Exception("Local IP Address Not Found!");
         }
 
-        public string GetCurrentProcessID()
+        public string GetCurrentProcessId()
         {
             return Process.GetCurrentProcess().Id.ToString();
         }

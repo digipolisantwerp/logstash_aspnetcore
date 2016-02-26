@@ -7,6 +7,7 @@
   "licenseUrl": "",
     "dependencies": {
         "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Configuration.Binder": "1.0.0-rc1-final",
         "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
         "Newtonsoft.Json.Schema": "2.0.2",
         "System.ComponentModel.Annotations": "4.0.11-beta-23516"
