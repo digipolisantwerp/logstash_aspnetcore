@@ -8,7 +8,7 @@ namespace Toolbox.Logstash.UnitTests.Message
     public class LogMessageBodyTests
     {
         [Fact]
-        private void DefaultLevelIsInformation()
+        private void DefaultLevelIsSet()
         {
             var body = new LogMessageBody();
             Assert.Equal(Defaults.Message.Level, body.Level);

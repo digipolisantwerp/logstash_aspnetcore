@@ -11,7 +11,7 @@ namespace Toolbox.Logstash.Message
 
         [DataType(DataType.DateTime)]
         [JsonProperty(Required = Required.Always)]
-        public DateTime TimeStamp { get; set; }
+        public DateTime TimeStamp { get; set; } = DateTime.Now;
 
         [JsonProperty(Required = Required.Always)]
         public LogMessageSource Source { get; set; }

@@ -1,11 +1,11 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{37010821-9350-2E9C-D78F-C644048585B2}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		nuget.config = nuget.config
 	EndProjectSection
 	ProjectSection(FolderGlobals) = preProject
 		global_1json__JSONSchema = http://json.schemastore.org/global
@@ -16,7 +16,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{ED331852-207E-70D5-C276-F1BE0923C18C}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Toolbox.Logstash", "src\Toolbox.Logstash\Toolbox.Logstash.xproj", "{74AB18B9-5597-17AF-1EBE-3028A9A51025}"
-EndProject
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Toolbox.Logstash.UnitTests", "test\Toolbox.Logstash.UnitTests\Toolbox.Logstash.UnitTests.xproj", "{3C92F72D-93FF-9592-5973-0A90027CFC30}"
 EndProject

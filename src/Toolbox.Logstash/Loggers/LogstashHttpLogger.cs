@@ -12,118 +12,39 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Toolbox.Logstash.Message;
+using Toolbox.Logstash.Client;
 
-namespace Toolbox.Logstash.Client
+namespace Toolbox.Logstash.Loggers
 {
-    /// <summary>
-    /// Implementation of the ILogger interface for logging messages to the logstash API.
-    /// </summary>
-    public class Logger : ILogger
+    public class LogstashHttpLogger : ILogstashLogger
     {
-        private readonly Guid _logId;
-        private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");
-        private readonly IWebClient _webClient;
-        private string _localIPAddress;
-        private string _currentProcessID;
-
-        public Guid LogId { get { return _logId; } }
-        public Uri Url { get { return _url; } }
-
-        public event EventHandler<MessageEventArgs> OnMessage;
-
-        public event EventHandler<FailEventArgs> OnMessageFail;
-
-        /// <summary>
-        /// Creates a new logger with the specified log ID. The logger is configured to the test setup on Azure.
-        /// This is probably the constructor you want to use 99 % of the times.
-        /// </summary>
-        public Logger(Guid logId) : this(logId, null)
-        {
-        }
+        public LogstashHttpLogger() : this(null)
+        { }
 
         /// <summary>
         /// Creates a new logger with the specified log ID and URL. 
         /// </summary>
-        public Logger(Guid logId, Uri url) : this(logId, url, new DotNetWebClientProxy())
-        {
-        }
+        public LogstashHttpLogger(Uri url) : this(url, new DotNetWebClientProxy())
+        { }
 
-        internal Logger(Guid logId, Uri url, IWebClient webClient)
+        internal LogstashHttpLogger(Uri url, IWebClient webClient)
         {
-            _logId = logId;
-            if (url != null) _url = url;
+            if ( url != null ) _url = url;
             _webClient = webClient;
             _localIPAddress = GetLocalIPAddress();
             _currentProcessID = GetCurrentProcessID();
         }
 
-        /// <summary>
-        /// Creates a instance of the logger. Do exactly the same as calling the constructor with a Guid parameter.
-        /// </summary>
-        public static Logger Create(Guid logId)
-        {
-            return new Logger(logId);
-        }
+        private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");
+        private readonly IWebClient _webClient;
+        private string _localIPAddress;
+        private string _currentProcessID;
 
-        public void Verbose(string messageTemplate, params object[] propertyValues)
-        {
-            Verbose(null, messageTemplate, propertyValues);
-        }
+        public Uri Url { get { return _url; } }
 
-        public void Verbose(Exception exception, string messageTemplate, params object[] propertyValues)
-        {
-            Log(exception, LogStashLevel.Trace, messageTemplate, propertyValues);
-        }
+        public event EventHandler<MessageEventArgs> OnMessage;
 
-        public void Debug(string messageTemplate, params object[] propertyValues)
-        {
-            Debug(null, messageTemplate, propertyValues);
-        }
-
-        public void Debug(Exception exception, string messageTemplate, params object[] propertyValues)
-        {
-            Log(exception, LogStashLevel.Debug, messageTemplate, propertyValues);
-        }
-
-        public void Information(string messageTemplate, params object[] propertyValues)
-        {
-            Information(null, messageTemplate, propertyValues);
-        }
-
-        public void Information(Exception exception, string messageTemplate, params object[] propertyValues)
-        {
-            Log(exception, LogStashLevel.Information, messageTemplate, propertyValues);
-        }
-
-        public void Warning(string messageTemplate, params object[] propertyValues)
-        {
-            Warning(null, messageTemplate, propertyValues);
-        }
-
-        public void Warning(Exception exception, string messageTemplate, params object[] propertyValues)
-        {
-            Log(exception, LogStashLevel.Warning, messageTemplate, propertyValues);
-        }
-
-        public void Error(string messageTemplate, params object[] propertyValues)
-        {
-            Error(null, messageTemplate, propertyValues);
-        }
-
-        public void Error(Exception exception, string messageTemplate, params object[] propertyValues)
-        {
-            Log(exception, LogStashLevel.Error, messageTemplate, propertyValues);
-        }
-
-        public void Critical(string messageTemplate, params object[] propertyValues)
-        {
-            Critical(null, messageTemplate, propertyValues);
-        }
-
-        public void Critical(Exception exception, string messageTemplate, params object[] propertyValues)
-        {
-            Log(exception, LogStashLevel.Critical, messageTemplate, propertyValues);
-        }
+        public event EventHandler<FailEventArgs> OnMessageFail;
 
         void Log(Exception exception, LogStashLevel level, string messageTemplate, params object[] propertyValues)
         {

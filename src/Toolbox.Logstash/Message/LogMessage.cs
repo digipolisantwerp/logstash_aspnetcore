@@ -8,9 +8,8 @@ namespace Toolbox.Logstash.Message
     {
         public LogMessage(LogStashLevel level = Defaults.Message.Level)
         {
-            //Header = new LogMessageHeader();
-            //Body = new LogMessageBody();
-            
+            Header = new LogMessageHeader();
+            Body = new LogMessageBody(level);
         }
 
         [JsonProperty(Required = Required.Always)]

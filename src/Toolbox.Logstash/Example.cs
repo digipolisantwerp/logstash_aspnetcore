@@ -16,7 +16,11 @@ namespace Toolbox.Logstash
             var factory = new LoggerFactory();
             factory.MinimumLevel = Microsoft.Extensions.Logging.LogLevel.Debug;
             var logger = factory.CreateLogger("MyLog");
-            factory.AddLogstashHttp(new Guid("bbe87cfc-526c-4240-a59f-ef1b61e2bed6"));
+            factory.AddLogstashHttp(options => 
+                                    {
+                                        options.Index = "index";
+                                        options.Url = "url";
+                                    });
 
             for (int i = 0; i < 500; i++)
             {
