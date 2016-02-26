@@ -33,7 +33,7 @@ namespace Toolbox.Logstash
                     }
                 }
             }
-            return new LogstashLogger(Logger);
+            return new LogstashLogger(Options, Logger);
         }
 
         public void Dispose()

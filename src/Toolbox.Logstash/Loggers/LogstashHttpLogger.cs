@@ -8,8 +8,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using Toolbox.Logstash.Message;
 using Toolbox.Logstash.Client;
@@ -22,20 +20,14 @@ namespace Toolbox.Logstash.Loggers
         {
             if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             if ( webClient == null ) throw new ArgumentNullException(nameof(webClient), $"{nameof(webClient)} cannot be null.");
-
             Options = options;
             WebClient = webClient;
-            _localIPAddress = GetLocalIPAddress();
-            _currentProcessId = GetCurrentProcessId();
         }
 
-        private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");
+        private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");       // ToDo (SVB) : url naar webclient (inject)
 
-        public LogstashOptions Options { get; private set; }
+        public LogstashOptions Options { get; private set; }        // ToDo (SVB) : options hier nodig ?
         public IWebClient WebClient { get; private set; }
-
-        private string _localIPAddress;
-        private string _currentProcessId;
 
         public Uri Url { get { return _url; } }
 
@@ -53,9 +45,6 @@ namespace Toolbox.Logstash.Loggers
 
         public string Log(LogMessage message)
         {
-            message.Header.IPAddress = _localIPAddress;
-            message.Header.ProcessId = _currentProcessId;
-            message.Header.ThreadId = Thread.CurrentThread.ManagedThreadId.ToString();
             return EndLog(BeginLog(message, null, null));
         }
 
@@ -172,24 +161,6 @@ namespace Toolbox.Logstash.Loggers
             }
 
             return task.Result;
-        }
-
-        public string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("Local IP Address Not Found!");
-        }
-
-        public string GetCurrentProcessId()
-        {
-            return Process.GetCurrentProcess().Id.ToString();
         }
 
         private Uri ApiUrl(NameValueCollection query = null)

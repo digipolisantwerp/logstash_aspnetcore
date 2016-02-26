@@ -6,6 +6,11 @@ namespace Toolbox.Logstash
     public class LogstashOptions
     {
         /// <summary>
+        /// The application's id or name.
+        /// </summary>
+        public string AppId { get; set; }
+
+        /// <summary>
         /// The Logstash Index where the logging messages are written to.
         /// </summary>
         public string Index { get; set; }

@@ -13,6 +13,7 @@ namespace Toolbox.Logstash.Options
 
             var options = new LogstashOptions()
             {
+                AppId = config.Get<string>(Defaults.ConfigKeys.AppId),
                 Url = config.Get<string>(Defaults.ConfigKeys.Url),
                 Index = config.Get<string>(Defaults.ConfigKeys.Index),
                 MinimumLevel = config.Get<LogLevel>(Defaults.ConfigKeys.MinimumLevel)
@@ -37,6 +38,7 @@ namespace Toolbox.Logstash.Options
 
         private static void Validate(LogstashOptions options)
         {
+            if ( String.IsNullOrWhiteSpace(options.AppId) ) throw new InvalidOptionException(Defaults.ConfigKeys.AppId, options.AppId, "Logging AppId is mandatory.");
             if ( String.IsNullOrWhiteSpace(options.Url) ) throw new InvalidOptionException(Defaults.ConfigKeys.Url, options.Url, "Logging Url is mandatory.");
             if ( String.IsNullOrWhiteSpace(options.Index) ) throw new InvalidOptionException(Defaults.ConfigKeys.Index, options.Index, "Logging Index is mandatory.");
 

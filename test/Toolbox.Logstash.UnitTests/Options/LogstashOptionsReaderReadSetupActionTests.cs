@@ -20,12 +20,10 @@ namespace Toolbox.Logstash.UnitTests.Options
         [Fact]
         private void UrlNullRaisesInvalidOptionException()
         {
-            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options => 
-            {
-                options.Url = null;
-                options.Index = "index";
-                options.MinimumLevel = LogLevel.Information;
-            }));
+            var setupAction = TestOptionsFactory.CreateSetupAction("myApp", null, "index", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
             Assert.Equal(Defaults.ConfigKeys.Url, ex.OptionKey);
             Assert.Equal("(null)", ex.OptionValue);
         }
@@ -33,12 +31,10 @@ namespace Toolbox.Logstash.UnitTests.Options
         [Fact]
         private void UrlEmptyRaisesInvalidOptionException()
         {
-            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>
-            {
-                options.Url = "";
-                options.Index = "index";
-                options.MinimumLevel = LogLevel.Information;
-            }));
+            var setupAction = TestOptionsFactory.CreateSetupAction("myApp", "", "index", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
             Assert.Equal(Defaults.ConfigKeys.Url, ex.OptionKey);
             Assert.Equal("", ex.OptionValue);
         }
@@ -46,12 +42,10 @@ namespace Toolbox.Logstash.UnitTests.Options
         [Fact]
         private void UrlWhitespaceRaisesInvalidOptionException()
         {
-            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>
-            {
-                options.Url = "  ";
-                options.Index = "index";
-                options.MinimumLevel = LogLevel.Information;
-            }));
+            var setupAction = TestOptionsFactory.CreateSetupAction("myApp", "  ", "index", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
             Assert.Equal(Defaults.ConfigKeys.Url, ex.OptionKey);
             Assert.Equal("  ", ex.OptionValue);
         }
@@ -59,12 +53,10 @@ namespace Toolbox.Logstash.UnitTests.Options
         [Fact]
         private void InvalidUriRaisesInvalidOptionException()
         {
-            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>
-            {
-                options.Url = "abcde";
-                options.Index = "index";
-                options.MinimumLevel = LogLevel.Information;
-            }));
+            var setupAction = TestOptionsFactory.CreateSetupAction("myApp", "abcde", "index", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
             Assert.Equal(Defaults.ConfigKeys.Url, ex.OptionKey);
             Assert.Equal("abcde", ex.OptionValue);
         }
@@ -72,12 +64,10 @@ namespace Toolbox.Logstash.UnitTests.Options
         [Fact]
         private void IndexNullRaisesInvalidOptionException()
         {
-            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>
-            {
-                options.Url = "http://localhost";
-                options.Index = null;
-                options.MinimumLevel = LogLevel.Information;
-            }));
+            var setupAction = TestOptionsFactory.CreateSetupAction("myApp", "http://localhost", null, LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
             Assert.Equal(Defaults.ConfigKeys.Index, ex.OptionKey);
             Assert.Equal("(null)", ex.OptionValue);
         }
@@ -85,12 +75,10 @@ namespace Toolbox.Logstash.UnitTests.Options
         [Fact]
         private void IndexEmptyRaisesInvalidOptionException()
         {
-            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>
-            {
-                options.Url = "http://localhost";
-                options.Index = "";
-                options.MinimumLevel = LogLevel.Information;
-            }));
+            var setupAction = TestOptionsFactory.CreateSetupAction("myApp", "http://localhost", "", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
             Assert.Equal(Defaults.ConfigKeys.Index, ex.OptionKey);
             Assert.Equal("", ex.OptionValue);
         }
@@ -98,12 +86,10 @@ namespace Toolbox.Logstash.UnitTests.Options
         [Fact]
         private void IndexWhitespaceRaisesInvalidOptionException()
         {
-            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>
-            {
-                options.Url = "http://localhost";
-                options.Index = "  ";
-                options.MinimumLevel = LogLevel.Information;
-            }));
+            var setupAction = TestOptionsFactory.CreateSetupAction("myApp", "http://localhost", "  ", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
             Assert.Equal(Defaults.ConfigKeys.Index, ex.OptionKey);
             Assert.Equal("  ", ex.OptionValue);
         }
@@ -113,11 +99,45 @@ namespace Toolbox.Logstash.UnitTests.Options
         {
             var logstashOptions = LogstashOptionsReader.Read(options =>
             {
+                options.AppId = "myApp";
                 options.Url = "http://localhost";
                 options.Index = "index";
             });
 
             Assert.Equal(0, (int)logstashOptions.MinimumLevel);               // the levels are changed in RC2, so this test will probably need to be updated
+        }
+
+        [Fact]
+        private void AppIdNullRaisesInvalidOptionException()
+        {
+            var setupAction = TestOptionsFactory.CreateSetupAction(null, "http://localhost", "index", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
+            Assert.Equal(Defaults.ConfigKeys.AppId, ex.OptionKey);
+            Assert.Equal("(null)", ex.OptionValue);
+        }
+
+        [Fact]
+        private void AppIdEmptyRaisesInvalidOptionException()
+        {
+            var setupAction = TestOptionsFactory.CreateSetupAction("", "http://localhost", "index", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
+            Assert.Equal(Defaults.ConfigKeys.AppId, ex.OptionKey);
+            Assert.Equal("", ex.OptionValue);
+        }
+
+        [Fact]
+        private void AppIdWhitespaceRaisesInvalidOptionException()
+        {
+            var setupAction = TestOptionsFactory.CreateSetupAction("  ", "http://localhost", "index", LogLevel.Information);
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(setupAction));
+
+            Assert.Equal(Defaults.ConfigKeys.AppId, ex.OptionKey);
+            Assert.Equal("  ", ex.OptionValue);
         }
     }
 }
