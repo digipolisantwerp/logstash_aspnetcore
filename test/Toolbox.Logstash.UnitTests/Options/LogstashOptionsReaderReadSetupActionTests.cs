@@ -57,6 +57,19 @@ namespace Toolbox.Logstash.UnitTests.Options
         }
 
         [Fact]
+        private void InvalidUriRaisesInvalidOptionException()
+        {
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>
+            {
+                options.Url = "abcde";
+                options.Index = "index";
+                options.MinimumLevel = LogLevel.Information;
+            }));
+            Assert.Equal(Defaults.ConfigKeys.Url, ex.OptionKey);
+            Assert.Equal("abcde", ex.OptionValue);
+        }
+
+        [Fact]
         private void IndexNullRaisesInvalidOptionException()
         {
             var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(options =>

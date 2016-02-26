@@ -39,6 +39,15 @@ namespace Toolbox.Logstash.Options
         {
             if ( String.IsNullOrWhiteSpace(options.Url) ) throw new InvalidOptionException(Defaults.ConfigKeys.Url, options.Url, "Logging Url is mandatory.");
             if ( String.IsNullOrWhiteSpace(options.Index) ) throw new InvalidOptionException(Defaults.ConfigKeys.Index, options.Index, "Logging Index is mandatory.");
+
+            try
+            {
+                var uri = new Uri(options.Url);
+            }
+            catch (UriFormatException)
+            {
+                throw new InvalidOptionException(Defaults.ConfigKeys.Url, options.Url, "Logging Url is not a valid uri.");
+            }
         }
     }
 }

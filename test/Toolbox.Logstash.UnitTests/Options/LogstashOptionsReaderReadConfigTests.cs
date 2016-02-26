@@ -54,6 +54,18 @@ namespace Toolbox.Logstash.UnitTests.Options
         }
 
         [Fact]
+        private void InvalidUriRaisesInvalidOptionException()
+        {
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.AddInMemoryCollection(TestConfigFactory.CreateMemoryConfig("abcdefg", "index", LogLevel.Error));
+            var config = configBuilder.Build();
+
+            var ex = Assert.Throws<InvalidOptionException>(() => LogstashOptionsReader.Read(config));
+            Assert.Equal(Defaults.ConfigKeys.Url, ex.OptionKey);
+            Assert.Equal("abcdefg", ex.OptionValue);
+        }
+
+        [Fact]
         private void IndexNullRaisesInvalidOptionException()
         {
             var configBuilder = new ConfigurationBuilder();
