@@ -5,22 +5,30 @@ using System.Net.Sockets;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using Toolbox.Logstash.Message;
-using Toolbox.Logstash.Options.Internal;
 
 namespace Toolbox.Logstash.Loggers
 {
     public class LogstashLogger : ILogger
     {
-        public LogstashLogger(ILogstashHttpLogger logger)
+        public LogstashLogger(IServiceProvider serviceProvider, ILogMessageBuilder logMessageBuilder, LogstashOptions options, ILogstashHttpLogger logger)
         {
+            if ( serviceProvider == null ) throw new ArgumentNullException(nameof(serviceProvider), $"{nameof(serviceProvider)} cannot be null.");
+            if ( logMessageBuilder == null ) throw new ArgumentNullException(nameof(logMessageBuilder), $"{nameof(logMessageBuilder)} cannot be null.");
+            if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             if ( logger == null ) throw new ArgumentNullException(nameof(logger), $"{nameof(logger)} cannot be null.");
+            ServiceProvider = serviceProvider;
+            LogMessageBuilder = logMessageBuilder;
+            Options = options;
             Logger = logger;
             _localIPAddress = GetLocalIPAddress();
             _currentProcessId = GetCurrentProcessId();
         }
 
-        public ILogstashHttpLogger Logger {get; private set; }
-        
+        internal LogstashOptions Options { get; private set; }
+        internal ILogstashHttpLogger Logger { get; private set; }
+        internal IServiceProvider ServiceProvider { get; private set; }
+        internal ILogMessageBuilder LogMessageBuilder { get; private set; }
+
         private string _localIPAddress;
         private string _currentProcessId;
 
@@ -31,7 +39,7 @@ namespace Toolbox.Logstash.Loggers
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            // The logstash client doesn't implement the concept of enabled/disabled log levels.
+            // The logstash client doesn't implement the concept of enabled/disabled log levels.    // ToDo (SVB) : check for minimumlevel
             return true;
         }
 
@@ -50,8 +58,8 @@ namespace Toolbox.Logstash.Loggers
             {
                 // ToDo (SVB) : all of this to LogMessageBuilder class ?
 
-                var logstashLevel = LogLevelToLogStashLevel(logLevel);
-                var logMessage = new LogMessage(logstashLevel);
+                var logstashLevel = LogLevelConverter.ToLogStashLevel(logLevel);
+                var logMessage = new LogMessage(logstashLevel);     // ToDo (SVB) : LogMessageBuilder
 
                 //logMessage.Header.Correlation = new Correlation() { ApplicationId = "appid-todo", CorrelationId = "correlationid-todo" };
                 //logMessage.Header.Index = Options.Index;
@@ -68,38 +76,6 @@ namespace Toolbox.Logstash.Loggers
 
                 Logger.Log(logMessage);
             }
-        }
-
-        private LogStashLevel LogLevelToLogStashLevel(LogLevel logLevel)
-        {
-            var level = LogStashLevel.Information;
-
-            switch ( logLevel )
-            {
-                case LogLevel.Debug:
-                    level = LogStashLevel.Debug;
-                    break;
-                case LogLevel.Verbose:
-                    level = LogStashLevel.Trace;
-                    break;
-                case LogLevel.Information:
-                    level = LogStashLevel.Information;
-                    break;
-                case LogLevel.Warning:
-                    level = LogStashLevel.Warning;
-                    break;
-                case LogLevel.Error:
-                    level = LogStashLevel.Error;
-                    break;
-                case LogLevel.Critical:
-                    level = LogStashLevel.Critical;
-                    break;
-                case LogLevel.None:
-                    level = LogStashLevel.None;
-                    break;
-            }
-
-            return level;
         }
 
         public string GetLocalIPAddress()

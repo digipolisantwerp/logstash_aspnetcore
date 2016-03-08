@@ -6,6 +6,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Toolbox.Logstash.Client;
 using Toolbox.Logstash.Message;
+using Microsoft.AspNet.Builder.Internal;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Toolbox.Logstash
 {
@@ -13,15 +15,17 @@ namespace Toolbox.Logstash
     {
         public static void Main(string[] args)
         {
+            var services = new ServiceCollection();
+            var app = new ApplicationBuilder(services.BuildServiceProvider());
             var factory = new LoggerFactory();
             factory.MinimumLevel = Microsoft.Extensions.Logging.LogLevel.Debug;
-            var logger = factory.CreateLogger("MyLog");
-            factory.AddLogstashHttp(options => 
+            factory.AddLogstashHttp(app, options => 
                                     {
                                         options.Index = "index";
                                         options.Url = "url";
                                     });
 
+            var logger = factory.CreateLogger("MyLog");
             for (int i = 0; i < 500; i++)
             {
                 Task.Run(() => logger.Log(Microsoft.Extensions.Logging.LogLevel.Debug, 100, BuildLogMessage(), null, null));

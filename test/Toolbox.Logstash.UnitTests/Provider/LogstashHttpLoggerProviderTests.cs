@@ -1,6 +1,5 @@
 ﻿using System;
 using Moq;
-using Toolbox.Logstash.Loggers;
 using Xunit;
 
 namespace Toolbox.Logstash.UnitTests.Provider
@@ -10,27 +9,37 @@ namespace Toolbox.Logstash.UnitTests.Provider
         [Fact]
         private void OptionsNullRaisesArgumentNullException()
         {
+            var serviceProvider = Mock.Of<IServiceProvider>();
             LogstashOptions nullOptions = null;
-            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashHttpLoggerProvider(nullOptions));
+            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashHttpLoggerProvider(serviceProvider, nullOptions));
             Assert.Equal("options", ex.ParamName);
+        }
+
+        [Fact]
+        private void ServiceProviderNullRaisesArgumentNullException()
+        {
+            IServiceProvider nullProvider = null;
+            var options = new LogstashOptions();
+            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashHttpLoggerProvider(nullProvider, options));
+            Assert.Equal("serviceProvider", ex.ParamName);
         }
 
         [Fact]
         private void OptionsIsSet()
         {
+            var serviceProvider = Mock.Of<IServiceProvider>();
             var options = new LogstashOptions();
-            var provider = new LogstashHttpLoggerProvider(options);
+            var provider = new LogstashHttpLoggerProvider(serviceProvider, options);
             Assert.Same(options, provider.Options);
         }
 
         [Fact]
-        private void LoggerIsSet()
+        private void ServiceProviderIsSet()
         {
+            var serviceProvider = Mock.Of<IServiceProvider>();
             var options = new LogstashOptions();
-            var logger = Mock.Of<ILogstashHttpLogger>();
-
-            var provider = new LogstashHttpLoggerProvider(options, logger);
-            Assert.Same(logger, provider.Logger);
+            var provider = new LogstashHttpLoggerProvider(serviceProvider, options);
+            Assert.Same(serviceProvider, provider.ServiceProvider);
         }
     }
 }

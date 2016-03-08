@@ -17,32 +17,21 @@ namespace Toolbox.Logstash.Loggers
 {
     public class LogstashHttpLogger : ILogstashHttpLogger
     {
-        public LogstashHttpLogger(IOptions<LogstashOptions> options, IWebClient webClient)
+        public LogstashHttpLogger(IWebClient webClient)
         {
-            if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             if ( webClient == null ) throw new ArgumentNullException(nameof(webClient), $"{nameof(webClient)} cannot be null.");
-            //Options = options.Value;
             WebClient = webClient;
         }
 
         private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");       // ToDo (SVB) : url naar webclient (inject)
 
-        public LogstashOptions Options { get; private set; }        // ToDo (SVB) : options hier nodig ?
-        public IWebClient WebClient { get; private set; }
+        internal IWebClient WebClient { get; private set; }
 
         public Uri Url { get { return _url; } }
 
         public event EventHandler<MessageEventArgs> OnMessage;
 
         public event EventHandler<FailEventArgs> OnMessageFail;
-
-        void Log(Exception exception, LogStashLevel level, string messageTemplate, params object[] propertyValues)
-        {
-            LogMessage message = new LogMessage();
-            //TBD enrich message
-
-            Log(message);
-        }
 
         public string Log(LogMessage message)
         {
