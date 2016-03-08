@@ -8,30 +8,11 @@ namespace Toolbox.Logstash.UnitTests.Loggers
     public class LogstashLoggerTests
     {
         [Fact]
-        private void OptionsNullRaisesArgumentNullException()
-        {
-            var innerLogger = Mock.Of<ILogstashHttpLogger>();
-            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger(null, innerLogger));
-            Assert.Equal("options", ex.ParamName);
-        }
-
-        [Fact]
         private void LoggerNullRaisesArgumentNullException()
         {
             var options = new LogstashOptions();
-            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger(options, null));
+            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger(options));
             Assert.Equal("logger", ex.ParamName);
-        }
-
-        [Fact]
-        private void OptionsIsSet()
-        {
-            var options = new LogstashOptions();
-            var innerLogger = Mock.Of<ILogstashHttpLogger>();
-
-            var logger = new LogstashLogger(options, innerLogger);
-
-            Assert.Same( options, logger.Options);
         }
 
         [Fact]

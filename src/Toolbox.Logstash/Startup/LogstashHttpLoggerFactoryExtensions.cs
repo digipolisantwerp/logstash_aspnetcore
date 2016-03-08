@@ -19,7 +19,7 @@ namespace Toolbox.Logstash
             if ( setupAction == null ) throw new ArgumentNullException(nameof(setupAction), $"{nameof(setupAction)} cannot be null.");
 
             var options = LogstashOptionsReader.Read(setupAction);
-            var provider = new LogstashHttpLoggerProvider(options);
+            //var provider = new LogstashHttpLoggerProvider(options);
 
             factory.AddProvider(provider);
             return factory;
@@ -35,7 +35,7 @@ namespace Toolbox.Logstash
             if ( config == null ) throw new ArgumentNullException(nameof(config), $"{nameof(config)} cannot be null.");
 
             var options = LogstashOptionsReader.Read(config);
-            var provider = new LogstashHttpLoggerProvider(options);
+            //var provider = new LogstashHttpLoggerProvider(options);
 
             factory.AddProvider(provider);
             return factory;

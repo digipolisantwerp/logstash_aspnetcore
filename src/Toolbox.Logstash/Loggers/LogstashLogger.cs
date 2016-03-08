@@ -11,17 +11,14 @@ namespace Toolbox.Logstash.Loggers
 {
     public class LogstashLogger : ILogger
     {
-        public LogstashLogger(LogstashOptions options, ILogstashHttpLogger logger)
+        public LogstashLogger(ILogstashHttpLogger logger)
         {
-            if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             if ( logger == null ) throw new ArgumentNullException(nameof(logger), $"{nameof(logger)} cannot be null.");
-            Options = options;
             Logger = logger;
             _localIPAddress = GetLocalIPAddress();
             _currentProcessId = GetCurrentProcessId();
         }
 
-        public LogstashOptions Options { get; private set; }
         public ILogstashHttpLogger Logger {get; private set; }
         
         private string _localIPAddress;
@@ -56,14 +53,14 @@ namespace Toolbox.Logstash.Loggers
                 var logstashLevel = LogLevelToLogStashLevel(logLevel);
                 var logMessage = new LogMessage(logstashLevel);
 
-                logMessage.Header.Correlation = new Correlation() { ApplicationId = "appid-todo", CorrelationId = "correlationid-todo" };
-                logMessage.Header.Index = Options.Index;
-                logMessage.Header.Source = new LogMessageSource(Options.AppId, "componentid-todo");
-                logMessage.Header.TimeStamp = DateTime.Now;
-                logMessage.Header.VersionNumber = Defaults.Message.HeaderVersion;
-                logMessage.Header.IPAddress = _localIPAddress;
-                logMessage.Header.ProcessId = _currentProcessId;
-                logMessage.Header.ThreadId = Thread.CurrentThread.ManagedThreadId.ToString();
+                //logMessage.Header.Correlation = new Correlation() { ApplicationId = "appid-todo", CorrelationId = "correlationid-todo" };
+                //logMessage.Header.Index = Options.Index;
+                //logMessage.Header.Source = new LogMessageSource(Options.AppId, "componentid-todo");
+                //logMessage.Header.TimeStamp = DateTime.Now;
+                //logMessage.Header.VersionNumber = Defaults.Message.HeaderVersion;
+                //logMessage.Header.IPAddress = _localIPAddress;
+                //logMessage.Header.ProcessId = _currentProcessId;
+                //logMessage.Header.ThreadId = Thread.CurrentThread.ManagedThreadId.ToString();
 
                 logMessage.Body.User = new LogMessageUser() { UserId = Thread.CurrentPrincipal.Identity.Name, IPAddress = null };       // ToDo (SVB) : where does user's ip address come from?
                 //logMessage.Body.VersionNumber = Options.MessageVersion;       // ??

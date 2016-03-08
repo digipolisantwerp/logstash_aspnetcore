@@ -2,6 +2,8 @@
 using Toolbox.Logstash.Loggers;
 using Toolbox.Logstash.Client;
 using Xunit;
+using Microsoft.Extensions.OptionsModel;
+using Moq;
 
 namespace Toolbox.Logstash.UnitTests.Loggers
 {
@@ -10,7 +12,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         [Fact]
         private void OptionsNullRaisesArgumentNullException()
         {
-            LogstashOptions nullOptions = null;
+            IOptions<LogstashOptions> nullOptions = null;
             var webClient = new DotNetWebClientProxy();
             var ex = Assert.Throws<ArgumentNullException>(() => new LogstashHttpLogger(nullOptions, webClient));
             Assert.Equal("options", ex.ParamName);
@@ -19,7 +21,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         [Fact]
         private void WebClientNullRaisesArgumentNullException()
         {
-            var options = new LogstashOptions();
+            var options = Mock.Of<IOptions<LogstashOptions>>();
             IWebClient nullClient = null;
             var ex = Assert.Throws<ArgumentNullException>(() => new LogstashHttpLogger(options, nullClient));
             Assert.Equal("webClient", ex.ParamName);
@@ -28,7 +30,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         [Fact]
         private void OptionsIsSet()
         {
-            var options = new LogstashOptions();
+            var options = Mock.Of<IOptions<LogstashOptions>>();
             var webClient = new DotNetWebClientProxy();
 
             var logger = new LogstashHttpLogger(options, webClient);
@@ -39,7 +41,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         [Fact]
         private void WebClientIsSet()
         {
-            var options = new LogstashOptions();
+            var options = Mock.Of<IOptions<LogstashOptions>>();
             var webClient = new DotNetWebClientProxy();
 
             var logger = new LogstashHttpLogger(options, webClient);

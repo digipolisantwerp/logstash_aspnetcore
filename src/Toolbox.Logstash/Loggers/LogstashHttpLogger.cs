@@ -11,16 +11,17 @@ using System.Net;
 using System.Threading.Tasks;
 using Toolbox.Logstash.Message;
 using Toolbox.Logstash.Client;
+using Microsoft.Extensions.OptionsModel;
 
 namespace Toolbox.Logstash.Loggers
 {
     public class LogstashHttpLogger : ILogstashHttpLogger
     {
-        public LogstashHttpLogger(LogstashOptions options, IWebClient webClient)
+        public LogstashHttpLogger(IOptions<LogstashOptions> options, IWebClient webClient)
         {
             if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             if ( webClient == null ) throw new ArgumentNullException(nameof(webClient), $"{nameof(webClient)} cannot be null.");
-            Options = options;
+            //Options = options.Value;
             WebClient = webClient;
         }
 
