@@ -10,7 +10,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         [Fact]
         private void OptionsNullRaisesArgumentNullException()
         {
-            var innerLogger = Mock.Of<ILogstashLogger>();
+            var innerLogger = Mock.Of<ILogstashHttpLogger>();
             var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger(null, innerLogger));
             Assert.Equal("options", ex.ParamName);
         }
@@ -27,7 +27,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         private void OptionsIsSet()
         {
             var options = new LogstashOptions();
-            var innerLogger = Mock.Of<ILogstashLogger>();
+            var innerLogger = Mock.Of<ILogstashHttpLogger>();
 
             var logger = new LogstashLogger(options, innerLogger);
 
@@ -38,7 +38,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         private void LoggerIsSet()
         {
             var options = new LogstashOptions();
-            var innerLogger = Mock.Of<ILogstashLogger>();
+            var innerLogger = Mock.Of<ILogstashHttpLogger>();
 
             var logger = new LogstashLogger(options, innerLogger);
 

@@ -27,7 +27,7 @@ namespace Toolbox.Logstash.UnitTests.Provider
         private void LoggerIsSet()
         {
             var options = new LogstashOptions();
-            var logger = Mock.Of<ILogstashLogger>();
+            var logger = Mock.Of<ILogstashHttpLogger>();
 
             var provider = new LogstashHttpLoggerProvider(options, logger);
             Assert.Same(logger, provider.Logger);

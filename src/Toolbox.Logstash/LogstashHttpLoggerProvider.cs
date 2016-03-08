@@ -7,7 +7,7 @@ namespace Toolbox.Logstash
 {
     public class LogstashHttpLoggerProvider : ILoggerProvider
     {
-        public LogstashHttpLoggerProvider(LogstashOptions options, ILogstashLogger logger = null)
+        public LogstashHttpLoggerProvider(LogstashOptions options, ILogstashHttpLogger logger = null)
         {
             if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
 
@@ -18,7 +18,7 @@ namespace Toolbox.Logstash
         private object _synclock = new object();
 
         internal LogstashOptions Options { get; private set; }
-        internal ILogstashLogger Logger { get; private set; }
+        internal ILogstashHttpLogger Logger { get; private set; }
         
         public ILogger CreateLogger(string name)
         {

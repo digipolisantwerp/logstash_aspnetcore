@@ -14,7 +14,7 @@ using Toolbox.Logstash.Client;
 
 namespace Toolbox.Logstash.Loggers
 {
-    public class LogstashHttpLogger : ILogstashLogger
+    public class LogstashHttpLogger : ILogstashHttpLogger
     {
         public LogstashHttpLogger(LogstashOptions options, IWebClient webClient)
         {

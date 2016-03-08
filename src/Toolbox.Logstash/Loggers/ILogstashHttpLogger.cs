@@ -7,7 +7,7 @@ namespace Toolbox.Logstash.Loggers
     /// <summary>
     /// The raw logger logging messages to logstash.
     /// </summary>
-    public interface ILogstashLogger
+    public interface ILogstashHttpLogger
     {
         /// <summary>
         /// By subscribing to the OnMessage event, you can hook into the pipeline of logging a message to logstash.

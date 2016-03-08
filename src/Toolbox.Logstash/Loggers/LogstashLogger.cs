@@ -11,7 +11,7 @@ namespace Toolbox.Logstash.Loggers
 {
     public class LogstashLogger : ILogger
     {
-        public LogstashLogger(LogstashOptions options, ILogstashLogger logger)
+        public LogstashLogger(LogstashOptions options, ILogstashHttpLogger logger)
         {
             if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             if ( logger == null ) throw new ArgumentNullException(nameof(logger), $"{nameof(logger)} cannot be null.");
@@ -22,7 +22,7 @@ namespace Toolbox.Logstash.Loggers
         }
 
         public LogstashOptions Options { get; private set; }
-        public ILogstashLogger Logger {get; private set; }
+        public ILogstashHttpLogger Logger {get; private set; }
         
         private string _localIPAddress;
         private string _currentProcessId;

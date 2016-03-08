@@ -1,6 +1,8 @@
 ﻿using System;
+using Microsoft.AspNet.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
 using Toolbox.Logstash.Options;
 
 namespace Toolbox.Logstash
@@ -26,7 +28,7 @@ namespace Toolbox.Logstash
         /// <summary>
         /// Adds the Logstash HTTP Provider to the ASP.NET logging framework.
         /// </summary>
-        /// <param name="config">An IConfiguration instane that contains the Logstash HTTP provider's options.</param>
+        /// <param name="config">An IConfiguration instance that contains the Logstash HTTP provider's options.</param>
         /// <returns>The LoggerFactory.</returns>
         public static ILoggerFactory AddLogstashHttp(this ILoggerFactory factory, IConfiguration config)
         {
@@ -34,6 +36,22 @@ namespace Toolbox.Logstash
 
             var options = LogstashOptionsReader.Read(config);
             var provider = new LogstashHttpLoggerProvider(options);
+
+            factory.AddProvider(provider);
+            return factory;
+        }
+
+        /// <summary>
+        /// Adds the Logstash HTTP Provider to the ASP.NET logging framework.
+        /// </summary>
+        /// <param name="app">The IApplicationBuilder.</param>
+        /// <returns>The LoggerFactory.</returns>
+        public static ILoggerFactory AddLogstashHttp(this ILoggerFactory factory, IApplicationBuilder app)
+        {
+            if ( app == null ) throw new ArgumentNullException(nameof(app), $"{nameof(app)} cannot be null.");
+
+            var provider = app.ApplicationServices.GetService(typeof(LogstashHttpLoggerProvider)) as LogstashHttpLoggerProvider;
+            //if ( provider == null ) throw new ArgumentNullException("LogstashHttpLoggerProvider", "LogstashHttpLoggerProvider is not registered. Are you sure you called services.AddLogstashLogging in the Startup.ConfigureServices method.");
 
             factory.AddProvider(provider);
             return factory;
