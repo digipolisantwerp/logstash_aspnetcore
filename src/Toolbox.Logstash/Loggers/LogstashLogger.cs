@@ -10,23 +10,17 @@ namespace Toolbox.Logstash.Loggers
 {
     public class LogstashLogger : ILogger
     {
-        public LogstashLogger(IServiceProvider serviceProvider, ILogMessageBuilder logMessageBuilder, LogstashOptions options, ILogstashHttpLogger logger)
+        public LogstashLogger(ILogMessageBuilder logMessageBuilder, ILogstashHttpLogger logger)
         {
-            if ( serviceProvider == null ) throw new ArgumentNullException(nameof(serviceProvider), $"{nameof(serviceProvider)} cannot be null.");
             if ( logMessageBuilder == null ) throw new ArgumentNullException(nameof(logMessageBuilder), $"{nameof(logMessageBuilder)} cannot be null.");
-            if ( options == null ) throw new ArgumentNullException(nameof(options), $"{nameof(options)} cannot be null.");
             if ( logger == null ) throw new ArgumentNullException(nameof(logger), $"{nameof(logger)} cannot be null.");
-            ServiceProvider = serviceProvider;
             LogMessageBuilder = logMessageBuilder;
-            Options = options;
             Logger = logger;
             _localIPAddress = GetLocalIPAddress();
             _currentProcessId = GetCurrentProcessId();
         }
 
-        internal LogstashOptions Options { get; private set; }
         internal ILogstashHttpLogger Logger { get; private set; }
-        internal IServiceProvider ServiceProvider { get; private set; }
         internal ILogMessageBuilder LogMessageBuilder { get; private set; }
 
         private string _localIPAddress;
