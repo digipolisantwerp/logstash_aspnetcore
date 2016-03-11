@@ -21,7 +21,7 @@ namespace Toolbox.Logstash.Client
                 Uri = new Uri(uriString);
         }
 
-        public Uri Uri { get; private set; }
+        public Uri Uri { get; private set; }            // http://e27-elk.cloudapp.net:8080/api/v2/messages
 
         private string _userAgent;
         private string UserAgent
@@ -43,13 +43,12 @@ namespace Toolbox.Logstash.Client
             }
         }
 
-        public Task<T> Post<T>(WebHeaderCollection headers, Uri address, string data, Func<WebHeaderCollection, string, T> resultor)
+        public Task<T> Post<T>(string data, WebHeaderCollection headers, Func<WebHeaderCollection, string, T> resultor)         // data as first param
         {
-            if (address == null) throw new ArgumentNullException("address");
             if (data == null) throw new ArgumentNullException("data");
             if (resultor == null) throw new ArgumentNullException("resultor");
 
-            var request = (HttpWebRequest)WebRequest.Create(address);
+            var request = (HttpWebRequest)WebRequest.Create(Uri);
             request.Method = "POST";
             request.Timeout = 5000;
             request.UserAgent = UserAgent;
@@ -98,12 +97,11 @@ namespace Toolbox.Logstash.Client
                 yield return task;
         }
 
-        public Task<T> Get<T>(WebHeaderCollection headers, Uri address, Func<WebHeaderCollection, string, T> resultor)
+        public Task<T> Get<T>(string id, WebHeaderCollection headers, Func<WebHeaderCollection, string, T> resultor)
         {
-            if (address == null) throw new ArgumentNullException("address");
             if (resultor == null) throw new ArgumentNullException("resultor");
 
-            var request = (HttpWebRequest)WebRequest.Create(address);
+            var request = (HttpWebRequest)WebRequest.Create(new Uri(Uri, id));
             request.UserAgent = UserAgent;
 
             if (headers != null)

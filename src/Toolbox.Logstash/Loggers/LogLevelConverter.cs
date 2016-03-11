@@ -3,34 +3,34 @@ using Microsoft.Extensions.Logging;
 
 namespace Toolbox.Logstash.Loggers
 {
-    public static class LogLevelConverter
+    public class LogLevelConverter : ILogLevelConverter
     {
-        public static LogStashLevel ToLogStashLevel(LogLevel logLevel)
+        public LogstashLevel ToLogStashLevel(LogLevel logLevel)
         {
-            var level = LogStashLevel.Information;
+            var level = LogstashLevel.Information;
 
             switch ( logLevel )
             {
                 case LogLevel.Debug:
-                    level = LogStashLevel.Debug;
+                    level = LogstashLevel.Debug;
                     break;
                 case LogLevel.Verbose:
-                    level = LogStashLevel.Trace;
+                    level = LogstashLevel.Trace;
                     break;
                 case LogLevel.Information:
-                    level = LogStashLevel.Information;
+                    level = LogstashLevel.Information;
                     break;
                 case LogLevel.Warning:
-                    level = LogStashLevel.Warning;
+                    level = LogstashLevel.Warning;
                     break;
                 case LogLevel.Error:
-                    level = LogStashLevel.Error;
+                    level = LogstashLevel.Error;
                     break;
                 case LogLevel.Critical:
-                    level = LogStashLevel.Critical;
+                    level = LogstashLevel.Critical;
                     break;
                 case LogLevel.None:
-                    level = LogStashLevel.None;
+                    level = LogstashLevel.None;
                     break;
             }
 

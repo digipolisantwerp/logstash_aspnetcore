@@ -31,8 +31,8 @@ namespace Toolbox.Logstash.UnitTests.Message
         [Fact]
         private void LevelIsSet()
         {
-            var message = new LogMessage(LogStashLevel.Trace);
-            Assert.Equal(LogStashLevel.Trace, message.Body.Level);
+            var message = new LogMessage(LogstashLevel.Trace);
+            Assert.Equal(LogstashLevel.Trace, message.Body.Level);
         }
     }
 }

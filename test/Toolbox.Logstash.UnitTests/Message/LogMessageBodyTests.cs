@@ -17,8 +17,8 @@ namespace Toolbox.Logstash.UnitTests.Message
         [Fact]
         private void LevelIsSet()
         {
-            var body = new LogMessageBody(LogStashLevel.Error);
-            Assert.Equal(LogStashLevel.Error, body.Level);
+            var body = new LogMessageBody(LogstashLevel.Error);
+            Assert.Equal(LogstashLevel.Error, body.Level);
         }
     }
 }

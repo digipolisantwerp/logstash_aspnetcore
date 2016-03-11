@@ -13,7 +13,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         private void BuilderNullRaisesArgumentNullException()
         {
             var logger = Mock.Of<ILogstashHttpLogger>();
-            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger(null, logger));
+            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger("myLogger", null, logger));
             Assert.Equal("logMessageBuilder", ex.ParamName);
         }
 
@@ -21,7 +21,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         private void LoggerNullRaisesArgumentNullException()
         {
             var builder = Mock.Of<ILogMessageBuilder>();
-            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger(builder, null));
+            var ex = Assert.Throws<ArgumentNullException>(() => new LogstashLogger("myLogger", builder, null));
             Assert.Equal("logger", ex.ParamName);
         }
 
@@ -31,7 +31,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
             var builder = Mock.Of<ILogMessageBuilder>();
             var innerLogger = Mock.Of<ILogstashHttpLogger>();
 
-            var logger = new LogstashLogger(builder, innerLogger);
+            var logger = new LogstashLogger("myLogger", builder, innerLogger);
 
             Assert.Same(builder, logger.LogMessageBuilder);
         }
@@ -42,9 +42,54 @@ namespace Toolbox.Logstash.UnitTests.Loggers
             var builder = Mock.Of<ILogMessageBuilder>();
             var innerLogger = Mock.Of<ILogstashHttpLogger>();
 
-            var logger = new LogstashLogger(builder, innerLogger);
+            var logger = new LogstashLogger("myLogger", builder, innerLogger);
 
             Assert.Same(innerLogger, logger.Logger);
+        }
+
+
+        [Fact]
+        private void NameIsSet()
+        {
+            var builder = Mock.Of<ILogMessageBuilder>();
+            var innerLogger = Mock.Of<ILogstashHttpLogger>();
+
+            var logger = new LogstashLogger("myLogger", builder, innerLogger);
+
+            Assert.Equal(logger.Name, "myLogger");
+        }
+
+        [Fact]
+        private void NameNullInitializesName()
+        {
+            var builder = Mock.Of<ILogMessageBuilder>();
+            var innerLogger = Mock.Of<ILogstashHttpLogger>();
+
+            var logger = new LogstashLogger(null, builder, innerLogger);
+
+            Assert.NotNull(logger.Name);
+        }
+
+        [Fact]
+        private void NameEmptyInitializesName()
+        {
+            var builder = Mock.Of<ILogMessageBuilder>();
+            var innerLogger = Mock.Of<ILogstashHttpLogger>();
+
+            var logger = new LogstashLogger("", builder, innerLogger);
+
+            Assert.NotNull(logger.Name);
+        }
+
+        [Fact]
+        private void NameWhitespaceInitializesName()
+        {
+            var builder = Mock.Of<ILogMessageBuilder>();
+            var innerLogger = Mock.Of<ILogstashHttpLogger>();
+
+            var logger = new LogstashLogger("  ", builder, innerLogger);
+
+            Assert.NotNull(logger.Name);
         }
     }
 }

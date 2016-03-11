@@ -2,7 +2,7 @@
 
 namespace Toolbox.Logstash
 {
-    public enum LogStashLevel
+    public enum LogstashLevel
     {
         Trace,
         Debug,

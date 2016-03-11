@@ -3,15 +3,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Toolbox.Logstash.Message;
 using Toolbox.Logstash.Client;
-using Microsoft.Extensions.OptionsModel;
 
 namespace Toolbox.Logstash.Loggers
 {
@@ -23,11 +19,7 @@ namespace Toolbox.Logstash.Loggers
             WebClient = webClient;
         }
 
-        private readonly Uri _url = new Uri("http://e27-elk.cloudapp.net:8080/");       // ToDo (SVB) : url naar webclient (inject)
-
         internal IWebClient WebClient { get; private set; }
-
-        public Uri Url { get { return _url; } }
 
         public event EventHandler<MessageEventArgs> OnMessage;
 
@@ -40,7 +32,6 @@ namespace Toolbox.Logstash.Loggers
 
         public IAsyncResult BeginLog(LogMessage message, AsyncCallback asyncCallback, object asyncState)
         {
-            //if (message.DateTime == DateTime.MinValue) message.DateTime = DateTime.UtcNow;
             if (OnMessage != null) OnMessage(this, new MessageEventArgs(message));
 
             var headers = new WebHeaderCollection { { HttpRequestHeader.ContentType, "application/json" } };
@@ -51,7 +42,8 @@ namespace Toolbox.Logstash.Loggers
             //var json = JsonConvert.SerializeObject(message, jsonSerializerSettings);
             var json = JsonConvert.SerializeObject(message);
 
-            return WebClient.Post(headers, ApiUrl(), json)
+            WebHeaderCollection nullHeaders = null;
+            return WebClient.Post<string>(json, nullHeaders, null)
                              .ContinueWith(t =>
                              {
                                  if (t.Status != TaskStatus.RanToCompletion)
@@ -86,7 +78,7 @@ namespace Toolbox.Logstash.Loggers
 
         public IAsyncResult BeginGetMessage(string id, AsyncCallback asyncCallback, object asyncState)
         {
-            return WebClient.Get(ApiUrl(new NameValueCollection { { "id", id } }))
+            return WebClient.Get<string>(id, null, null)
                              .ContinueWith(t =>
                              {
                                  if (t.Status != TaskStatus.RanToCompletion)
@@ -151,11 +143,6 @@ namespace Toolbox.Logstash.Loggers
             }
 
             return task.Result;
-        }
-
-        private Uri ApiUrl(NameValueCollection query = null)
-        {
-            return new Uri(_url, "api/v2/messages");
         }
     }
 }

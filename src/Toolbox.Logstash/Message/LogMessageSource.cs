@@ -8,7 +8,8 @@ namespace Toolbox.Logstash.Message
     {
         public LogMessageSource(string applicationId = null, string componentId = null)
         {
-
+            ApplicationId = applicationId;
+            ComponentId = componentId;
         }
 
         [MinLength(1)]

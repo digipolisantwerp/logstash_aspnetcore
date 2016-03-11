@@ -21,10 +21,11 @@ namespace Toolbox.Logstash
         
         public ILogger CreateLogger(string name)
         {
-            var builder = new LogMessageBuilder(ServiceProvider, Options);
+            var converter = new LogLevelConverter();
+            var builder = new LogMessageBuilder(ServiceProvider, converter, Options);
             var webClient = new DotNetWebClientProxy(Options.Url, "useragent");     // ToDo (SVB) : nodige options hier injecten
             var logger = new LogstashHttpLogger(webClient);
-            return new LogstashLogger(builder, logger);
+            return new LogstashLogger(name, builder, logger);
         }
 
         public void Dispose()

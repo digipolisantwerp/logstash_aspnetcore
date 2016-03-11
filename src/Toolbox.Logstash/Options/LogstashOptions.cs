@@ -24,5 +24,10 @@ namespace Toolbox.Logstash
         /// The MinimumLevel of the Logstash logger.
         /// </summary>
         public LogLevel MinimumLevel { get; set; }
+
+        /// <summary>
+        /// The version of your message. You can use this field when parsing the message in Logstash.
+        /// </summary>
+        public string MessageVersion { get; set; } = "1";
     }
 }

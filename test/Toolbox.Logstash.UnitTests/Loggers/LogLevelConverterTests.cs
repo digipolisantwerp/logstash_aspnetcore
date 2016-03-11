@@ -8,16 +8,17 @@ namespace Toolbox.Logstash.UnitTests.Loggers
     public class LogLevelConverterTests
     {
         [Theory]
-        [InlineData(LogLevel.Critical, LogStashLevel.Critical)]
-        [InlineData(LogLevel.Debug, LogStashLevel.Debug)]
-        [InlineData(LogLevel.Error, LogStashLevel.Error)]
-        [InlineData(LogLevel.Information, LogStashLevel.Information)]
-        [InlineData(LogLevel.None, LogStashLevel.None)]
-        [InlineData(LogLevel.Verbose, LogStashLevel.Trace)]
-        [InlineData(LogLevel.Warning, LogStashLevel.Warning)]
-        private void ToLogstashLevelTests(LogLevel logLevel, LogStashLevel expectedLevel)
+        [InlineData(LogLevel.Critical, LogstashLevel.Critical)]
+        [InlineData(LogLevel.Debug, LogstashLevel.Debug)]
+        [InlineData(LogLevel.Error, LogstashLevel.Error)]
+        [InlineData(LogLevel.Information, LogstashLevel.Information)]
+        [InlineData(LogLevel.None, LogstashLevel.None)]
+        [InlineData(LogLevel.Verbose, LogstashLevel.Trace)]
+        [InlineData(LogLevel.Warning, LogstashLevel.Warning)]
+        private void ToLogstashLevelTests(LogLevel logLevel, LogstashLevel expectedLevel)
         {
-            var level = LogLevelConverter.ToLogStashLevel(logLevel);
+            var converter = new LogLevelConverter();
+            var level = converter.ToLogStashLevel(logLevel);
             Assert.Equal(expectedLevel, level);
         }
     }

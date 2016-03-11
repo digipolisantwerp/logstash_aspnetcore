@@ -7,7 +7,7 @@ namespace Toolbox.Logstash.Message
 {
     public class LogMessageBody
     {
-        public LogMessageBody(LogStashLevel level = Defaults.Message.Level)
+        public LogMessageBody(LogstashLevel level = Defaults.Message.Level)
         {
             Level = level;
         }
@@ -15,7 +15,7 @@ namespace Toolbox.Logstash.Message
         [JsonProperty(Required = Required.DisallowNull)]
         public LogMessageUser User { get; set; }
 
-        public LogStashLevel Level { get; set; }
+        public LogstashLevel Level { get; set; }
 
         [MinLength(1)]
         [MaxLength(1048576)]

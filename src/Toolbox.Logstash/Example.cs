@@ -54,7 +54,7 @@ namespace Toolbox.Logstash
             header.TimeStamp = DateTime.Now;
             header.VersionNumber = "v1.0.2";
 
-            body.Level = LogStashLevel.Debug;
+            body.Level = LogstashLevel.Debug;
             body.Content = "business_content";
             body.User = new LogMessageUser();
             body.User.IPAddress = IPAddress.Loopback.ToString();

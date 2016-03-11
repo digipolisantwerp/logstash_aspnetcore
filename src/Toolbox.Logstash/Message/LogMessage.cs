@@ -6,7 +6,7 @@ namespace Toolbox.Logstash.Message
 {
     public class LogMessage
     {
-        public LogMessage(LogStashLevel level = Defaults.Message.Level)
+        public LogMessage(LogstashLevel level = Defaults.Message.Level)
         {
             Header = new LogMessageHeader();
             Body = new LogMessageBody(level);
