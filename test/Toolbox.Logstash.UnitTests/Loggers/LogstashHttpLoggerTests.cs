@@ -18,7 +18,7 @@ namespace Toolbox.Logstash.UnitTests.Loggers
         [Fact]
         private void WebClientIsSet()
         {
-            var webClient = new DotNetWebClientProxy();
+            var webClient = new DotNetWebClientProxy("http://localhost", "useragent");
             var logger = new LogstashHttpLogger(webClient);
             Assert.Same(webClient, logger.WebClient);
         }

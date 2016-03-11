@@ -22,7 +22,7 @@ namespace Toolbox.Logstash
         public ILogger CreateLogger(string name)
         {
             var builder = new LogMessageBuilder(ServiceProvider, Options);
-            var webClient = new DotNetWebClientProxy();     // ToDo (SVB) : nodige options hier injecten
+            var webClient = new DotNetWebClientProxy(Options.Url, "useragent");     // ToDo (SVB) : nodige options hier injecten
             var logger = new LogstashHttpLogger(webClient);
             return new LogstashLogger(builder, logger);
         }

@@ -15,13 +15,20 @@ namespace Toolbox.Logstash.Client
 {
     internal class DotNetWebClientProxy : IWebClient
     {
-        private string _userAgent;
+        public DotNetWebClientProxy(string uriString, string userAgent)
+        {
+            if ( String.IsNullOrWhiteSpace(userAgent) ) throw new ArgumentException($"{nameof(userAgent)} is mandatory.", nameof(userAgent));
+                Uri = new Uri(uriString);
+        }
 
+        public Uri Uri { get; private set; }
+
+        private string _userAgent;
         private string UserAgent
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(_userAgent))
+                if (string.IsNullOrWhiteSpace(_userAgent) )          // ToDo (SVB) : user agent injecteren
                 {
                     try
                     {
@@ -36,8 +43,7 @@ namespace Toolbox.Logstash.Client
             }
         }
 
-        public Task<T> Post<T>(WebHeaderCollection headers, Uri address, string data,
-            Func<WebHeaderCollection, string, T> resultor)
+        public Task<T> Post<T>(WebHeaderCollection headers, Uri address, string data, Func<WebHeaderCollection, string, T> resultor)
         {
             if (address == null) throw new ArgumentNullException("address");
             if (data == null) throw new ArgumentNullException("data");
