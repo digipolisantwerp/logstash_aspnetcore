@@ -14,22 +14,19 @@
         "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
         "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
         "Newtonsoft.Json.Schema": "2.0.2",
-        "System.ComponentModel.Annotations": "4.0.11-beta-23516"
+		"System.ComponentModel.Annotations": "4.0.11-beta-23516",
+		"Toolbox.Correlation": "1.0.0"
     },
   "frameworks": {
     "dnx451": {
       "frameworkAssemblies": {
         "System.ComponentModel.DataAnnotations": "4.0.0.0"
       },
-      "dependencies": {
-      }
+      "dependencies": { }
     }
   },
   "compilationOptions": {
     "emitEntryPoint": true
-  },
-  "commands": {
-    "Example": "Toolbox.Logstash"
   }
 }
 

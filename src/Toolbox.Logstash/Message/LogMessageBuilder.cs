@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Toolbox.Correlation;
 using Toolbox.Logstash.Loggers;
 using Toolbox.Logstash.Options.Internal;
 
@@ -34,6 +35,9 @@ namespace Toolbox.Logstash.Message
         {
             if ( state == null && exception == null ) return null;
 
+            
+            
+
             var logstashLevel = LogLevelConverter.ToLogStashLevel(logLevel);
             var logMessage = new LogMessage(logstashLevel); 
             
@@ -45,8 +49,7 @@ namespace Toolbox.Logstash.Message
 
             if ( !string.IsNullOrEmpty(message) )
             {
-
-                //logMessage.Header.Correlation = new Correlation() { ApplicationId = "appid-todo", CorrelationId = "correlationid-todo" };
+                logMessage.Header.Correlation = BuildCorrelation();
                 logMessage.Header.Index = Options.Index;
                 logMessage.Header.Source = new LogMessageSource(Options.AppId, loggerName);
                 logMessage.Header.TimeStamp = DateTime.Now;
@@ -63,6 +66,15 @@ namespace Toolbox.Logstash.Message
             }
 
             return logMessage;
+        }
+
+        private LogMessageCorrelation BuildCorrelation()
+        {
+            var correlationContext = ServiceProvider.GetService(typeof(ICorrelationContext)) as ICorrelationContext;
+            if ( correlationContext != null )
+                return new LogMessageCorrelation(correlationContext.CorrelationSource, correlationContext.CorrelationId);
+            else
+                return new LogMessageCorrelation(Options.AppId, Guid.NewGuid().ToString());
         }
 
         private string GetLocalIPAddress()

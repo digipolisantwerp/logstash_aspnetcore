@@ -7,7 +7,7 @@ namespace Toolbox.Logstash.Message
     public class LogMessageHeader
     {
         [JsonProperty(Required = Required.Always)]
-        public Correlation Correlation { get; set; }
+        public LogMessageCorrelation Correlation { get; set; }
 
         [DataType(DataType.DateTime)]
         [JsonProperty(Required = Required.Always)]

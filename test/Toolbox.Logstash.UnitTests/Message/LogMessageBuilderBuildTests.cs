@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Toolbox.Correlation;
 using Toolbox.Logstash.Loggers;
 using Toolbox.Logstash.Message;
 using Toolbox.Logstash.Options.Internal;
@@ -194,6 +195,70 @@ namespace Toolbox.Logstash.UnitTests.Message
             var message = builder.Build("myLogger", LogLevel.Information, "state", null);
 
             Assert.Equal("state", message.Body.Content);
+        }
+
+        [Fact]
+        private void CorrelationApplicationIdIsSetFromRegisteredCorrelationContext()
+        {
+            var correlationContext = new Mock<ICorrelationContext>();
+            var serviceProvider = new Mock<IServiceProvider>();
+            var converter = new LogLevelConverter();
+            var options = new LogstashOptions() { AppId = "myApp", Index = "myIndex", Url = "http://localhost" };
+
+            correlationContext.SetupGet(p => p.CorrelationSource).Returns("correlation-app");
+            serviceProvider.Setup(sp => sp.GetService(typeof(ICorrelationContext))).Returns(correlationContext.Object);
+
+            var builder = new LogMessageBuilder(serviceProvider.Object, converter, options);
+
+            var message = builder.Build("myLogger", LogLevel.Information, "state", null);
+
+            Assert.Equal("correlation-app", message.Header.Correlation.ApplicationId);
+        }
+
+        [Fact]
+        private void CorrelationIdIsSetFromRegisteredCorrelationContext()
+        {
+            var correlationContext = new Mock<ICorrelationContext>();
+            var serviceProvider = new Mock<IServiceProvider>();
+            var converter = new LogLevelConverter();
+            var options = new LogstashOptions() { AppId = "myApp", Index = "myIndex", Url = "http://localhost" };
+
+            correlationContext.SetupGet(p => p.CorrelationId).Returns("correlation-id");
+            serviceProvider.Setup(sp => sp.GetService(typeof(ICorrelationContext))).Returns(correlationContext.Object);
+
+            var builder = new LogMessageBuilder(serviceProvider.Object, converter, options);
+
+            var message = builder.Build("myLogger", LogLevel.Information, "state", null);
+
+            Assert.Equal("correlation-id", message.Header.Correlation.CorrelationId);
+        }
+
+        [Fact]
+        private void CorrelationApplicationIdIsSetWithoutRegisteredCorrelationContext()
+        {
+            var serviceProvider = Mock.Of<IServiceProvider>();
+            var converter = new LogLevelConverter();
+            var options = new LogstashOptions() { AppId = "myApp", Index = "myIndex", Url = "http://localhost" };
+
+            var builder = new LogMessageBuilder(serviceProvider, converter, options);
+
+            var message = builder.Build("myLogger", LogLevel.Information, "state", null);
+
+            Assert.Equal(options.AppId, message.Header.Correlation.ApplicationId);
+        }
+
+        [Fact]
+        private void CorrelationIdIsSetWithoutRegisteredCorrelationContext()
+        {
+            var serviceProvider = Mock.Of<IServiceProvider>();
+            var converter = new LogLevelConverter();
+            var options = new LogstashOptions() { AppId = "myApp", Index = "myIndex", Url = "http://localhost" };
+
+            var builder = new LogMessageBuilder(serviceProvider, converter, options);
+
+            var message = builder.Build("myLogger", LogLevel.Information, "state", null);
+
+            Assert.NotNull(message.Header.Correlation.CorrelationId);
         }
     }
 }

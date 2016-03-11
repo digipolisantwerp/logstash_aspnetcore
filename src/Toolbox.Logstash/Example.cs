@@ -43,7 +43,7 @@ namespace Toolbox.Logstash
             message.Body = body;
 
             header.Source.ApplicationId = Guid.NewGuid().ToString();
-            header.Correlation = new Correlation();
+            header.Correlation = new LogMessageCorrelation();
             header.Correlation.ApplicationId = Guid.NewGuid().ToString();
             header.Correlation.CorrelationId = Guid.NewGuid().ToString();
             header.Index = "new_index";
