@@ -43,7 +43,7 @@ namespace Toolbox.Logstash.Loggers
             var json = JsonConvert.SerializeObject(message);
 
             WebHeaderCollection nullHeaders = null;
-            return WebClient.Post<string>(json, nullHeaders, null)
+            return WebClient.Post<string>(json, nullHeaders, (responseHeaders, r) => responseHeaders["Location"])           // ToDo (SVB) : resultor func checken
                              .ContinueWith(t =>
                              {
                                  if (t.Status != TaskStatus.RanToCompletion)

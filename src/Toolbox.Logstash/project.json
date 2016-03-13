@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "description": "Logstash provider for the ASP.NET 5 logging framework.",
+  "version": "0.7.0",
+  "description": "Logstash provider for the ASP.NET Core logging framework.",
   "authors": [ "digipolis.be" ],
   "tags": [ "" ],
   "projectUrl": "",

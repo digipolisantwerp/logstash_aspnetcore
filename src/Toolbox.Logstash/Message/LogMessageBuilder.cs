@@ -57,8 +57,9 @@ namespace Toolbox.Logstash.Message
                 logMessage.Header.IPAddress = LocalIPAddress;
                 logMessage.Header.ProcessId = CurrentProcess;
                 logMessage.Header.ThreadId = Thread.CurrentThread.ManagedThreadId.ToString();
-                
-                //logMessage.Body.User = new LogMessageUser() { UserId = Thread.CurrentPrincipal.Identity.Name, IPAddress = null };       // ToDo (SVB) : where does user's ip address come from?
+
+                //logMessage.Body.User = new LogMessageUser() { UserId = Thread.CurrentPrincipal?.Identity?.Name, IPAddress = LocalIPAddress };       // ToDo (SVB) : where does user's ip address come from?
+                logMessage.Body.User = new LogMessageUser() { UserId = "ss", IPAddress = LocalIPAddress };
                 logMessage.Body.VersionNumber = Options.MessageVersion;
                 logMessage.Body.Content = message;
                 //logMessage.Body.Content = Serialize(state);     // ??
