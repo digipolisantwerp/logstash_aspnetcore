@@ -1,0 +1,9 @@
+{
+	"version": "0.7.0",
+	"name": "Toolbox.Logstash",
+	"private": true,
+	"devDependencies": {
+		"gulp": "3.9.0",
+		"gulp-doctoc": "0.1.3"
+	}
+}
