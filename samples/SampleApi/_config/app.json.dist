@@ -1,0 +1,7 @@
+{
+    "AppSettings": {
+        "AppName": "%%app.name%%",
+        "DataDirectory": "%%app.datadirectory%%",
+        "TempDirectory": "%%app.tempdirectory%%"
+    }
+}

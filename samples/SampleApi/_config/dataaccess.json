@@ -1,0 +1,16 @@
+{
+    "DataAccess": {
+        "ConnectionString": {
+            "Host": "localhost",
+            "Port": "5432",
+            "DbName": "dbname",
+            "User": "postgres",
+            "Password":  "postgres"
+        },
+        "LazyLoadingEnabled": false,
+        "PluralizeTableNames": false,
+        "DefaultSchema":  "main",
+        "DisableCascadingDeletes":  true,
+        "UseLowercaseOnTablesAndFields":  true
+    }
+}
