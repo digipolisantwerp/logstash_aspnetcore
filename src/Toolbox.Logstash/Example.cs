@@ -5,6 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Toolbox.Logstash.Client;
+using Toolbox.Logstash.Message;
+using Microsoft.AspNet.Builder.Internal;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Toolbox.Logstash
 {
@@ -12,11 +15,17 @@ namespace Toolbox.Logstash
     {
         public static void Main(string[] args)
         {
+            var services = new ServiceCollection();
+            var app = new ApplicationBuilder(services.BuildServiceProvider());
             var factory = new LoggerFactory();
             factory.MinimumLevel = Microsoft.Extensions.Logging.LogLevel.Debug;
-            var logger = factory.CreateLogger("MyLog");
-            factory.AddLogstashHTTPInput(new Guid("bbe87cfc-526c-4240-a59f-ef1b61e2bed6"));
+            factory.AddLogstashHttp(app, options => 
+                                    {
+                                        options.Index = "index";
+                                        options.Url = "url";
+                                    });
 
+            var logger = factory.CreateLogger("MyLog");
             for (int i = 0; i < 500; i++)
             {
                 Task.Run(() => logger.Log(Microsoft.Extensions.Logging.LogLevel.Debug, 100, BuildLogMessage(), null, null));
@@ -26,33 +35,33 @@ namespace Toolbox.Logstash
 
         public static LogMessage BuildLogMessage()
         {
-            LogMessage log = new LogMessage();
-            Infrastructure infra = new Infrastructure();
-            Message message = new Message();
+            LogMessage message = new LogMessage();
+            LogMessageHeader header = new LogMessageHeader();
+            LogMessageBody body = new LogMessageBody();
 
-            log.Infrastructure = infra;
-            log.Message = message;
+            message.Header = header;
+            message.Body = body;
 
-            infra.AppID = Guid.NewGuid();
-            infra.FlowInitiator = new FlowInitiator();
-            infra.FlowInitiator.ApplicationID = Guid.NewGuid();
-            infra.FlowInitiator.CorrelationID = Guid.NewGuid();
-            infra.Index = "new_index";
-            infra.IPAddress = IPAddress.Loopback.ToString();
-            infra.LoggingSource = "logging_source";
-            infra.LogLevel = Client.LogLevel.ERROR;
-            infra.ProcessID = "135";
-            infra.ThreadID = "15";
-            infra.TimeStamp = DateTime.Now;
-            infra.VersionNumber = "v1.0.2";
+            header.Source.ApplicationId = Guid.NewGuid().ToString();
+            header.Correlation = new LogMessageCorrelation();
+            header.Correlation.ApplicationId = Guid.NewGuid().ToString();
+            header.Correlation.CorrelationId = Guid.NewGuid().ToString();
+            header.Index = "new_index";
+            header.IPAddress = IPAddress.Loopback.ToString();
+            header.Source = new LogMessageSource("appid", "logging_source");
+            header.ProcessId = "135";
+            header.ThreadId = "15";
+            header.TimeStamp = DateTime.Now;
+            header.VersionNumber = "v1.0.2";
 
-            message.Content = "business_content";
-            message.User = new User();
-            message.User.IPAddress = IPAddress.Loopback.ToString();
-            message.User.UserID = @"ICA\EX01913";
-            message.VersionNumber = "v1.0.3";
+            body.Level = LogstashLevel.Debug;
+            body.Content = "business_content";
+            body.User = new LogMessageUser();
+            body.User.IPAddress = IPAddress.Loopback.ToString();
+            body.User.UserId = @"ICA\EX01913";
+            body.VersionNumber = "v1.0.3";
 
-            return log;
+            return message;
 
         }
     }

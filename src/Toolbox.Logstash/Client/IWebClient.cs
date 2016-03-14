@@ -6,7 +6,7 @@ namespace Toolbox.Logstash.Client
 {
     public interface IWebClient
     {
-        Task<T> Post<T>(WebHeaderCollection headers, Uri address, string data, Func<WebHeaderCollection, string, T> resultor);
-        Task<T> Get<T>(WebHeaderCollection headers, Uri address, Func<WebHeaderCollection, string, T> resultor);
+        Task<T> Post<T>(string data, WebHeaderCollection headers, Func<WebHeaderCollection, string, T> resultor);
+        Task<T> Get<T>(string id, WebHeaderCollection headers, Func<WebHeaderCollection, string, T> resultor);
     }
 }
